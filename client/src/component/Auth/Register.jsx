@@ -26,7 +26,7 @@ const Register = () => {
                     //            res.json({status : true ,user_data ,auth_token})
                     
                     localStorage.setItem("token",result.auth_token)
-                    Navigate('/home')
+                    Navigate('/')
                 }else{
                     console.log(result)
                     

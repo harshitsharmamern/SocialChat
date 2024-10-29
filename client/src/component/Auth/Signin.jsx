@@ -33,13 +33,16 @@ const Signin = () => {
             //         password: password
             //       })
             //     });
+            
 
                 const result = await resp.json()
                 
                 if(result.status==true){
+                    console.log(result);
+                    
                     console.log(result.authToken);
-                    Navigate('/') //navigate to home page
                     localStorage.setItem("token",result.authToken)
+                    Navigate('/') //navigate to home page
                     
                     setloading(false);
                 }else{
