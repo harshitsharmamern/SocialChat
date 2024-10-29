@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+import { register_user_route } from '../Apis/IsvalidUser';
 
 const Register = () => {
     const [name, setname] = useState("");
@@ -20,23 +20,8 @@ const Register = () => {
             console.log("filed greater then 2",name)
         }else{
             console.log("submit")
-            const resp = await fetch(
-                `http://localhost:8000/auth/registration`
-                , {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    //   "auth-token": localStorage.getItem("token"),
-                  },
-                  body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    password: password
-                  })
-                });
-
+            const resp = await register_user_route({name,email,password})
                 const result = await resp.json()
-            
                 if(result.status==true){
                     //            res.json({status : true ,user_data ,auth_token})
                     

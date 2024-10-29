@@ -1,8 +1,13 @@
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-const fetch_user = "http://localhost:8000/auth/user_home" 
+// const fetch_user = "http://localhost:8000/auth/user_home" 
+//`http://localhost:8000/auth/registration`
+import config from "../../Config"
+const fetch_user = `${config.API_BASE_URL}/auth/user_home`
+const login_user_api = `${config.API_BASE_URL}/auth/user_login`
+const register_user_api = `${config.API_BASE_URL}/auth/registration`
 
-export const config ={
+export const configCred ={
     headers: {
         'Content-Type': 'application/json',
         'auth-token': localStorage.getItem('token') || null
@@ -10,23 +15,83 @@ export const config ={
 }
 export const IsValidUser = async()=>{
     try{
-        const validate = await axios.get(fetch_user,config)
- //    res.json({user_data,currUser : req.mongo, message : "you r in home page"})
-//  return  res.json({status:false,message:'you mst be logedin to access'})
-//  return  res.json({status:false,message:'your token is wrong'})
-        // const Navigate = useNavigate();
-        // if(!validate.data.status){
-        //     Navigate('/login')
-        // }
-        
+        const validate = await axios.get(fetch_user,configCred)
         return validate.data
     
     }catch (error) {
         console.error('Error validating token:', error);
         return null;
       }
-      
 } 
+
+export const login_user_route = async({email,password})=>{
+    try{
+    return  await fetch(login_user_api,
+        {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+              })
+            })
+
+    }catch(e){
+        console.log(e);
+        return null;
+    }
+}
+
+export const register_user_route = async({name,email,password})=>{
+    try{
+        return await fetch(register_user_api,
+        {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                password: password
+              })
+            })
+
+    }catch(e){
+        console.log(e);
+        return null;
+    }
+}
+// const resp = await fetch(
+//     `http://localhost:8000/auth/registration`
+//     , {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//         //   "auth-token": localStorage.getItem("token"),
+//       },
+//       body: JSON.stringify({
+//         name: name,
+//         email: email,
+//         password: password
+//       })
+//     });
+
+// const resp = await fetch(
+//     `http://localhost:8000/auth/user_login`
+//     , {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         email: email,
+//         password: password
+//       })
+//     });
+
 
 
 ////////////////////
