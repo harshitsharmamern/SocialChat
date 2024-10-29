@@ -7,16 +7,18 @@ const fetch_user = `${config.API_BASE_URL}/auth/user_home`
 const login_user_api = `${config.API_BASE_URL}/auth/user_login`
 const register_user_api = `${config.API_BASE_URL}/auth/registration`
 
-export const configCred ={
-    headers: {
-        'Content-Type': 'application/json',
-        'auth-token': localStorage.getItem('token') || null
-    }
-}
 export const IsValidUser = async()=>{
     try{
+        const configCred ={
+           headers: {
+               'Content-Type': 'application/json',
+               'auth-token': localStorage.getItem("token") 
+           }
+       }
+        console.log(configCred);
+        
         const validate = await axios.get(fetch_user,configCred)
-        return validate.data
+        return await validate.data
     
     }catch (error) {
         console.error('Error validating token:', error);
