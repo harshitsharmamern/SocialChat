@@ -9,8 +9,11 @@ const dbconnection = require(".//model/db")
 dbconnection()
 const io = new Server(http_Server,{
     cors: {
-        origin: "http://127.0.0.1:5173", // The origin of your React app
-        methods: ["GET", "POST"], // Allowed methods
+      origin: [
+        "http://127.0.0.1:5173", // Local development
+        "https://social-chat-harshitsharmamerns-projects.vercel.app" // Deployed frontend
+    ],
+      methods: ["GET", "POST"], // Allowed methods
       }
 })
 app.use(cors())
