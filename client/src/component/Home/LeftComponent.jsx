@@ -5,18 +5,36 @@ import { useDispatch, useSelector } from "react-redux";
 
 //redux action
 import { setChat } from "../../context/Chat_Slice";
+import config from "../../Config";
+import { getChatId } from "../Apis/IsvalidUser";
 
 
-const LeftComponent = () => {
+const LeftComponent = React.memo(() => {
   const navigate = useNavigate()
   const dispatch = useDispatch()  
   const AllUser = useSelector(state=>state.UserAuth.AllUser)
-    const currentUser = useSelector(state=>state.UserAuth)
-    const handlesetuser=(data)=>{
-      dispatch(setChat({activeChat: {id : data._id , name : data.Name , email : data.email}}))
+
+  const currentUser = useSelector(state=>state.UserAuth)
+  
+  const handlesetuser=async (data)=>{
+    
+    const getchatidroute = await getChatId({senderId : data._id})
+    console.log("chatid:" ,getchatidroute);
+    
+    
+    dispatch(setChat({activeChat: {id : data._id , name : data.Name , email : data.email,
+      },  ChatId : getchatidroute
+    }))
+    // dispatch(setChat({activeChat :{id : data._id , name : data.Name , email : data.email,
+    //     }, ChatId :getchatidroute  } ))
+    console.log("dikat");
+      // console.log({ data, getchatidroute});
+      
     }    
     const handleLogout=()=>{
+      console.log("remve token");
       localStorage.removeItem("token")
+      
       navigate("/login")
     }
     const filteruser = AllUser.filter(user=> user._id!=currentUser.id)
@@ -29,6 +47,9 @@ const LeftComponent = () => {
         <button onClick={handleLogout}>Logout</button>
         curr user : {currentUser.name}
         </div>
+
+
+
       <div>  
         {
           filteruser.map((user)=>{return (<> 
@@ -38,7 +59,7 @@ const LeftComponent = () => {
       </div> 
     </div>
     </>  )
-}
+})
 
 export default LeftComponent
 

@@ -7,15 +7,18 @@ import {validateToken} from '../component/demo/Api.js'
 
 
 import IsAuth from '../component/Auth/IsAuth'
+import Signin from '../component/Auth/Signin.jsx'
+import Register from '../component/Auth/Register.jsx'
 const Routing = () => {
   
  
   return (
     <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
-          {/* <Route path="/" element={<Demo />} /> */}
-          <Route path="/login" element={<IsAuth/>} />
+          <Route path="/" element={<IsAuth />} />
+          <Route path="/login" element={<Signin />} />
+          <Route path="/register" element={<Register/>} />
+          <Route path="/home" element={<Home />} />
           <Route path="*" element={<div>404 not found</div>} />
         </Routes>
       </BrowserRouter>

@@ -14,7 +14,7 @@ const isAuthenticated=(req,res,next)=>{
       try{
           const data = jwt.verify(token,jwt_screte)
           req.mongo = data
-          console.log("correct");
+        //   console.log("correct");
            
           next()
           

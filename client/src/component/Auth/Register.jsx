@@ -7,12 +7,14 @@ const Register = () => {
     const [name, setname] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
+    const [loading,setloading] = useState(false)
     const Navigate = useNavigate();
     const handlesubmit = async() => {
         // Handle the submit logic here
+        setloading(true)
         if(name.length<2 || email.length<2 || password.length<2){
             // return toast.warn("lenth of each field greater than 5");
+            setloading(false)
             toast.warn("Each field must be at least 3 characters long.", {
                 position: "top-right",
                 autoClose: 2000,
@@ -24,18 +26,24 @@ const Register = () => {
                 const result = await resp.json()
                 if(result.status==true){
                     //            res.json({status : true ,user_data ,auth_token})
-                    
                     localStorage.setItem("token",result.auth_token)
-                    Navigate('/')
-                }else{
-                    console.log(result)
                     
+                    Navigate('/home')
+                    setloading(false)
+                }else{
+                    toast.warn("can't have this name.", {
+                        position: "top-right",
+                        autoClose: 2000,
+                    });
+                    console.log(result)
+                    setloading(false)
                 }
             }
     };
 
     return (
         <> 
+        {loading? <p>...Loding</p> : 
         <div style={{ backgroundColor: "red",  width: "100vw", height: "80vh",flexDirection:"column", display: "flex", justifyContent: "center", alignItems: "center" }}>
            <div  > <h1 > Register </h1></div>
             <div style={{ backgroundColor: "yellow", padding: "20px",   borderRadius: "8px", }}>
@@ -73,7 +81,7 @@ const Register = () => {
                     <button onClick={handlesubmit}>Submit</button>
                 </div>
             </div>
-        </div>
+        </div> }
                         </>
     );
 }

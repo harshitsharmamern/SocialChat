@@ -15,24 +15,45 @@ const io = new Server(http_Server,{
 })
 app.use(cors())
 
-io.on("connection", (socket) => {
-  socket.emit('connected',socket.id)
-  console.log("server started socket")
-  console.log(socket.id)
 
-  socket.on('message',(data)=>{
+///
+// const chatschema = require("./model/Chat")
+// const messageschema = require("")
+
+//
+io.on("connection", (socket) => {
+
+  // socket.on('set-up',(chatid)=>{
+  //   socket.join(chatid)
+  //   console.log('connected to socket with id : ', chatid);
     
-    io.to(data.roomName).emit('recived-message',data.message)
+  // })
+  socket.on('join-room',(chatid)=>{
+    console.log(`user connected to id:${socket.id} `,chatid);
+    socket.join(chatid)
   })
-  socket.on('join-room',(roomname)=>{
-    socket.join(roomname)
-  })
- 
+
+  socket.on('send-message',(data)=>{
+    
+  //  console.log(data.data);
+   
+    
+    socket.to(data.data.chat._id).emit('recived-message', data.data);
+  //   socket.to(data.SelectedChatId).emit('recived-message', {
+  //     msg: data.typemessage,
+  //     sender: socket.id // Optional, if you want to track the sender
+  // });
+
   
+  })
 });
 app.use(express.json())
+
+
 app.use("/auth",require("./routes/user"))
 app.use("/chat",require("./routes/Chat"))
+app.use("/message",require("./routes/Message"))
+
 
 
 const PORT = process.env.PORT || 8000;

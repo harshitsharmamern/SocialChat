@@ -9,7 +9,7 @@ import RightComponent from "./RightComponent.jsx";
 
 ///import apis
 import { IsValidUser } from "../Apis/IsvalidUser.js";
-
+import config from "../../Config.js";
 //context Action
 import { setActiveUser } from "../../context/UserReducer.jsx";
 
@@ -18,20 +18,30 @@ import { setActiveUser } from "../../context/UserReducer.jsx";
 import BounceLoader from 'react-spinners/BounceLoader';
 
 
+//
+import { io } from 'socket.io-client';
+
+
 
 const Home = () => {
-  const activeuser = useSelector((state) => state.UserAuth.id);
-  console.log({activeuser});
+  const activeuser = useSelector((state) => state.UserAuth.id);   //curren et  user
+  const ChatId = useSelector(state=>state.SelectedChat.ChatId);  //also called room
+  const SelectedUser = useSelector(state=>state.SelectedChat.activeChat)
+  // const socket = io(config.API_BASE_URL);
+  // useEffect(()=>{
+       
+  //   socket.emit('set-up',ChatId)
   
+  // },[ChatId])
   const [loding,setLoding] = useState(false)
-  console.log(activeuser);
+  // console.log(activeuser);
   const dispatch = useDispatch();
   const navigate = useNavigate()
   useEffect(() => {
     setLoding(true)
     const isvalid = async () => {
       const valid_user = await IsValidUser();
-      console.log(valid_user);
+      // console.log(valid_user);
       
       if (!valid_user.status) {   
         setLoding(false)
@@ -58,21 +68,26 @@ const Home = () => {
 
     isvalid();
   }, [activeuser, dispatch]);
+  // console.log({SelectedUser});
+  
   return (
     <>
     {loding?<Loder/> :
-      <div style={{ display: "flex", margin: "0", padding: "0" }}>
-        <div
-          style={{
-            minWidth: "20%",
-            backgroundColor: "red",
-            minHeight: "100vh",
-          }}
-        >
+      <div style={{ display: "flex", height: "100vh", margin: "0", padding: "0" }}>
+      <div
+        style={{
+          width: "20%",
+          backgroundColor: "red",
+          height: "100vh",   // Make the left component take the full viewport height
+          overflowY: "auto", // Enable vertical scroll for the left component
+        }}
+      >
           <LeftComponent />
         </div>
-        <div style={{ flex: "1" }}>
-          <RightComponent />
+        <div style={{ flex: 1, height: "100vh", overflowY: "auto" }}> {/* Add overflowY for independent scrolling */}
+        {Object.keys(SelectedUser).length === 0 ?<div style={right_component}>
+           Select user {" "}<span style={{color:"pink", padding:"10px"}}> to send message </span> </div>: <RightComponent />}
+         {/* <RightComponent /> */}
         </div>
       </div>
 }
@@ -81,7 +96,27 @@ const Home = () => {
 };
 const Loder = ()=>{
   return (<>
-     <BounceLoader  />
+    <div style={loaderContainer}> 
+       <BounceLoader  /> </div>
   </>)
+}
+const right_component={
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  height: "100vh",
+  fontSize: "2rem", // Large font size for prominent text
+  color: "white",
+  fontWeight: "bold",
+  textAlign: "center",
+  background: "linear-gradient(135deg, #4c669f, #3b5998, #192f6a)", // Gradient background
+  boxShadow: "inset 0 0 10px rgba(0, 0, 0, 0.5)", // Adds depth to the background
+
+}
+const loaderContainer= {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  height: "100vh",
 }
 export default Home;

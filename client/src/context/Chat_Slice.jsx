@@ -6,13 +6,14 @@ const fetch_chat = createSlice({
   initialState:{
     // chats: [],
     activeChat: {},
+    ChatId :''
     // isLoading: false,
     // notifications: [],
   },
   reducers: {
        setChat :(state,action)=>{
          state.activeChat = action.payload.activeChat;
-         
+         state.ChatId = action.payload.ChatId;
        },
   }, 
 });

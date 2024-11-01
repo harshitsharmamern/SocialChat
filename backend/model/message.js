@@ -5,12 +5,12 @@ const message = mongoose.Schema({
   
     sender : {
         type : mongo,
-        ref : user_schema
+        ref : 'user'
     },
     content : {type : String},
     chat : {
         type : mongo,
-        ref : Chat
+        ref : 'Chat'
     }
 },{
     timestamps: true,

@@ -1,15 +1,31 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import {login_user_route} from '../Apis/IsvalidUser'
+import {IsValidUser, login_user_route} from '../Apis/IsvalidUser'
 
 import { useNavigate } from 'react-router-dom';
+
+import { toast } from 'react-toastify';
+import { setActiveUser } from '../../context/UserReducer';
+import { useDispatch } from 'react-redux';
+
 const Signin = () => {
     // const [name, setname] = useState("");
+    const dispatch = useDispatch()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading,setloading] = useState(false)
     const Navigate = useNavigate();
     
+    useEffect(()=>{
+        const isvalid = async () => {
+            const valid_user = await IsValidUser();
+            console.log({valid_user});
+            
+            if(valid_user.status){
+                Navigate('/home')
+            }
+        }
+        isvalid()
+    },[])
    
     const handlesubmit = async() => {
         setloading(true);
@@ -21,30 +37,24 @@ const Signin = () => {
             });
         }else{
             const resp = await login_user_route({email,password})
-            // const resp = await fetch(
-            //     `http://localhost:8000/auth/user_login`
-            //     , {
-            //       method: "POST",
-            //       headers: {
-            //         "Content-Type": "application/json",
-            //       },
-            //       body: JSON.stringify({
-            //         email: email,
-            //         password: password
-            //       })
-            //     });
-            
-
+               
                 const result = await resp.json()
+                console.log({result});
                 
                 if(result.status==true){
-                    console.log(result);
+                    console.log({result});
+                    // console.log();
                     
-                    console.log(result.authToken);
+                    // console.log(result.authToken);
+                    // let AuthToken = result.authToken;
+                    // let Name = result.Name;
+                    // let email = result.email;
+                    // let id = result._id;
                     localStorage.setItem("token",result.authToken)
-                    Navigate('/') //navigate to home page
-                    
                     setloading(false);
+
+                        Navigate('/home') //navigate to home page
+                
                 }else{
                     toast.error("An error occurred during registration. Please try again.", { position: "top-right", autoClose: 2000 });
 
@@ -54,6 +64,7 @@ const Signin = () => {
     };
 
     const element = (
+        <>
         <div style={{ backgroundColor: "red", width: "100vw", height: "80vh", display: "flex", flexDirection:"column", justifyContent: "center", alignItems: "center" }}>
         <div> <h1> Signin </h1></div>
     
@@ -67,7 +78,7 @@ const Signin = () => {
            value={email} 
            onChange={(e) => setEmail(e.target.value)} 
            style={{ marginLeft: "10px", flexGrow: 1 }} 
-       />
+           />
     </div>
     
     <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
@@ -77,7 +88,7 @@ const Signin = () => {
            value={password} 
            onChange={(e) => setPassword(e.target.value)} 
            style={{ marginLeft: "10px", flexGrow: 1 }} 
-       />
+           />
     </div>
     
     <div>
@@ -85,6 +96,8 @@ const Signin = () => {
     </div>
     </div>
     </div>
+
+           </>
     )
     return (
 <>

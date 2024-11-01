@@ -4,10 +4,11 @@ const chatSchema = require("../model/Chat");
 const app = express.Router();
 const mongoose = require("mongoose");
 
-app.get('/accessChat',isAuthenticated, async (req, res) => {
-    const {userId} = req.body;
+app.post('/accessChat',isAuthenticated, async (req, res) => {
+    // const {userId} = req.body;
+    const userId = req.body.userId; 
     let logedInUserId = req.mongo.user_data._id;
-    // console.log(userId);
+    // console.log({userId,logedInUserId});
     
     try{
         const chat = await chatSchema.findOne({

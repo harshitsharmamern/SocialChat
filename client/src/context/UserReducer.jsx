@@ -6,7 +6,8 @@ const initialState = {
     id: '',
     email: '',
     name: '',
-    AllUser : []
+    AllUser : [],
+    token : localStorage.getItem("token")
   };
 const AuthUser = createSlice({
   name: 'Auth',
@@ -17,6 +18,7 @@ const AuthUser = createSlice({
          state.email = action.payload.email;
          state.name = action.payload.name;
          state.AllUser = action.payload.AllUser;
+         state.token = action.payload.AuthToken;
        },
   }, 
 });
